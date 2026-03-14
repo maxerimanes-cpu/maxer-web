@@ -2087,15 +2087,80 @@ async function checkout() {
 
   if (!okNombre || !okTel || !okEmail || !okDir) {
     showNotif('Revisá los campos marcados en rojo.');
-    // Scroll al primer campo inválido
     const first = document.querySelector('.form-control.invalid');
     if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
     return;
   }
 
   const btn = document.getElementById('btnCheckout');
-  btn.textContent = 'Procesando...';
+  btn.textContent = 'Generando pago...';
   btn.disabled = true;
+
+  try {
+    const disc = getDiscount(getTotalMetros());
+    const f = getFormData();
+
+    // Armar items para MP
+    const items = cart.map(item => ({
+      title: item.name,
+      quantity: item.qty,
+      unit_price: Math.round(item.precioBase * (1 - disc)),
+      currency_id: 'ARS',
+      description: item.qty + ' metros'
+    }));
+
+    // Crear preferencia de pago via API de MP
+    const resp = await fetch('https://api.mercadopago.com/checkout/preferences', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer APP_USR-5312837703155787-031417-985d8ba0310ae427d30edcfa1d5e362a-104607685'
+      },
+      body: JSON.stringify({
+        items,
+        payer: {
+          name: f.nombre,
+          email: f.email,
+          phone: { number: f.telefono }
+        },
+        back_urls: {
+          success: 'https://maxer-web.vercel.app?pago=ok',
+          failure: 'https://maxer-web.vercel.app?pago=error',
+          pending: 'https://maxer-web.vercel.app?pago=pendiente'
+        },
+        auto_return: 'approved',
+        statement_descriptor: 'MAXER IMANES',
+        external_reference: f.nombre + '-' + Date.now()
+      })
+    });
+
+    const data = await resp.json();
+
+    if (data.init_point) {
+      // Enviar a Make antes de redirigir
+      await enviarAMake({
+        fecha: new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' }),
+        ...f,
+        items: cart.map(i => i.name + ' · ' + i.qty + ' metros'),
+        total: '$' + getTotalPesos().toLocaleString('es-AR'),
+        descuento: Math.round(disc*100) + '%',
+        canal: 'Web - MercadoPago',
+        estado: 'Iniciado'
+      });
+
+      closeCart();
+      showNotif('Redirigiendo a MercadoPago...');
+      setTimeout(() => { window.location.href = data.init_point; }, 800);
+    } else {
+      throw new Error(data.message || 'Error al generar el pago');
+    }
+
+  } catch(err) {
+    console.error('MP Error:', err);
+    showNotif('Error al conectar con MercadoPago. Usá WhatsApp.');
+    btn.textContent = 'Confirmar y pagar con MercadoPago';
+    btn.disabled = false;
+  }
 
   const disc = getDiscount(getTotalMetros());
   const payload = {
@@ -2149,6 +2214,22 @@ function showNotif(msg) {
   n.classList.add('show');
   setTimeout(function() { n.classList.remove('show'); }, 4000);
 }
+
+// ─── RETORNO DE MERCADOPAGO ───
+(function(){
+  const params = new URLSearchParams(window.location.search);
+  const pago = params.get('pago');
+  if (pago === 'ok') {
+    setTimeout(() => showNotif('¡Pago aprobado! Gracias por tu compra. Te contactamos pronto.'), 500);
+    // Limpiar carrito
+    cart = [];
+    renderCart();
+  } else if (pago === 'error') {
+    setTimeout(() => showNotif('El pago no se completó. Intentá de nuevo o contactanos.'), 500);
+  } else if (pago === 'pendiente') {
+    setTimeout(() => showNotif('Pago pendiente de confirmación. Te avisamos cuando se acredite.'), 500);
+  }
+})();
 
 // ─── SCROLL SUAVE ───
 document.querySelectorAll('a[href^="#"]').forEach(function(a) {
