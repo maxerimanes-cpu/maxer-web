@@ -3010,6 +3010,7 @@ async function checkout() {
       referencia:  ref
     };
     sessionStorage.setItem('pedido_pendiente', JSON.stringify(pedidoData));
+    localStorage.setItem('pedido_pendiente', JSON.stringify(pedidoData));
 
     // Armar items para MP
     const items = cart.map(item => ({
@@ -3047,8 +3048,7 @@ async function checkout() {
         auto_return: 'approved',
         binary_mode: false,
         statement_descriptor: 'MAXER IMANES',
-        external_reference: ref,
-        notification_url: CONFIG.MAKE_WEBHOOK_URL
+        external_reference: ref
       })
     });
 
@@ -3107,13 +3107,12 @@ function showNotif(msg) {
   const pago = params.get('pago');
   if (!pago) return;
 
-  // Recuperar datos del pedido guardados antes de ir a MP
-  const pedidoStr = sessionStorage.getItem('pedido_pendiente');
+  // Recuperar datos del pedido — sessionStorage primero, localStorage como respaldo
+  const pedidoStr = sessionStorage.getItem('pedido_pendiente') || localStorage.getItem('pedido_pendiente');
 
   if (pago === 'ok') {
     setTimeout(() => showNotif('¡Pago aprobado! Gracias por tu compra. Te contactamos pronto.'), 500);
 
-    // Enviar a Make SOLO cuando el pago fue aprobado
     if (pedidoStr) {
       try {
         const pedido = JSON.parse(pedidoStr);
@@ -3128,6 +3127,7 @@ function showNotif(msg) {
         // Guardar en Firebase
         window._guardarPedidoFirebase && window._guardarPedidoFirebase(pedido);
         sessionStorage.removeItem('pedido_pendiente');
+        localStorage.removeItem('pedido_pendiente');
       } catch(e) { console.warn('Parse pedido:', e); }
     }
 
@@ -3144,7 +3144,6 @@ function showNotif(msg) {
   } else if (pago === 'pendiente') {
     setTimeout(() => showNotif('Pago pendiente de acreditación. Te avisamos cuando se confirme.'), 500);
 
-    // Enviar a Make con estado pendiente
     if (pedidoStr) {
       try {
         const pedido = JSON.parse(pedidoStr);
@@ -3155,6 +3154,8 @@ function showNotif(msg) {
           body: JSON.stringify(pedido),
           mode: 'no-cors'
         }).catch(e => console.warn('Make:', e));
+        sessionStorage.removeItem('pedido_pendiente');
+        localStorage.removeItem('pedido_pendiente');
       } catch(e) {}
     }
     window.history.replaceState({}, '', '/');
