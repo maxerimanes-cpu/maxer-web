@@ -1673,8 +1673,19 @@ body {
   .footer-bottom p { font-size: 11px; }
 }
 </style>
+<!-- Google One Tap -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
+<!-- Google One Tap container -->
+<div id="g_id_onload"
+  data-client_id="563702313972-e9kg827ebt77ci0qiher2kumslfsi0st.apps.googleusercontent.com"
+  data-callback="handleOneTap"
+  data-auto_prompt="true"
+  data-cancel_on_tap_outside="false"
+  data-context="signin"
+  data-itp_support="true">
+</div>
 
 <div class="notif" id="notif">Pedido recibido. Te contactamos pronto.</div>
 
@@ -3186,7 +3197,7 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a) {
 <!-- ─── FIREBASE (script módulo separado) ─── -->
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, updateProfile } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, updateProfile, signInWithCredential } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 import { getFirestore, collection, addDoc, query, where, orderBy, getDocs, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const firebaseConfig = {
@@ -3206,11 +3217,38 @@ let currentUser = null;
 // Exponer funciones al scope global para que el HTML pueda llamarlas
 window._fb = { auth, db };
 
+// ─── GOOGLE ONE TAP ───
+window.handleOneTap = async function(response) {
+  try {
+    const credential = GoogleAuthProvider.credential(response.credential);
+    const result = await signInWithCredential(auth, credential);
+    const user = result.user;
+    // Guardar cliente si es nuevo
+    const ref = doc(db, 'clientes', user.uid);
+    const snap = await getDoc(ref);
+    if (!snap.exists()) {
+      await setDoc(ref, {
+        nombre: user.displayName || '',
+        email: user.email,
+        uid: user.uid,
+        fechaRegistro: new Date().toISOString()
+      });
+    }
+    if (typeof showNotif === 'function') showNotif('¡Bienvenido ' + (user.displayName ? user.displayName.split(' ')[0] : '') + '!');
+  } catch(err) {
+    console.warn('One Tap error:', err);
+  }
+};
+
 // Ocultar botón mientras Firebase detecta el estado de sesión
 const _btnCuenta = document.getElementById('btnCuenta');
 if (_btnCuenta) _btnCuenta.style.opacity = '0';
 
 onAuthStateChanged(auth, async function(user) {
+  // Si ya está logueado, cancelar el One Tap
+  if (user && window.google && window.google.accounts) {
+    window.google.accounts.id.cancel();
+  }
   currentUser = user;
   window._fbUser = user;
   const btn   = document.getElementById('btnCuenta');
