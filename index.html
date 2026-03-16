@@ -1033,26 +1033,41 @@ body {
 .envio-option.selected { border-color: var(--teal); background: rgba(0,212,184,.05); }
 .envio-option input[type="radio"] { accent-color: var(--teal); flex-shrink: 0; }
 .envio-option-info { flex: 1; }
-.envio-option-name { font-size: 13px; font-weight: 600; color: var(--navy); }
+.envio-option-name { font-size: 13px; font-weight: 700; color: var(--navy); }
 .envio-option-desc { font-size: 11px; color: var(--gray); margin-top: 2px; }
-.envio-option-price {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 14px; font-weight: 700; color: var(--navy);
-}
+.envio-option-price { font-family: 'Bricolage Grotesque', sans-serif; font-size: 14px; font-weight: 700; color: var(--navy); }
 .envio-option-price.gratis { color: var(--teal2); }
-.envio-cp-wrap { display: flex; gap: 8px; margin-top: 10px; }
-.envio-cp-wrap input { flex: 1; }
-.btn-calcular-envio {
-  background: var(--navy); color: white;
-  border: none; border-radius: 10px; padding: 0 16px;
-  font-size: 12px; font-weight: 700; cursor: pointer;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  white-space: nowrap; transition: background .2s;
+
+.envio-calc-box {
+  margin-top: 12px; background: white;
+  border-radius: 10px; padding: 14px;
+  border: 1px solid var(--border);
 }
-.btn-calcular-envio:hover { background: var(--coral); }
+.envio-cp-wrap { display: flex; gap: 8px; }
+.envio-cp-wrap input { flex: 1; }
+
 .envio-resultado {
   font-size: 12px; color: var(--gray); margin-top: 8px;
-  display: none;
+}
+.envio-tabla { margin-top: 12px; }
+.envio-tabla-row {
+  display: flex; justify-content: space-between;
+  font-size: 12px; color: var(--gray); margin-bottom: 10px;
+}
+.envio-tabla-zona { font-weight: 600; color: var(--navy); }
+.envio-precio-final {
+  display: flex; justify-content: space-between; align-items: center;
+  background: var(--off); border-radius: 8px; padding: 10px 12px;
+  margin-bottom: 8px;
+}
+.envio-precio-final span { font-size: 13px; color: var(--gray); }
+.envio-precio-final strong {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 20px; font-weight: 800; color: var(--navy);
+}
+.envio-nota {
+  font-size: 11px; color: var(--gray); line-height: 1.5;
+  font-style: italic; margin: 0;
 }
 
 /* ─── ORDER SUMMARY DROPDOWN ─── */
@@ -2025,36 +2040,49 @@ body {
       <div class="envio-section">
         <span class="envio-title">Método de entrega</span>
         <div class="envio-options">
-          <label class="envio-option selected" onclick="selectEnvio(this, 'Retiro en local', 0)">
+
+          <!-- OPCIÓN 1: RETIRO -->
+          <label class="envio-option selected" onclick="selectEnvio(this, 'retiro')">
             <input type="radio" name="envio" value="retiro" checked>
             <div class="envio-option-info">
-              <div class="envio-option-name">Retiro en local</div>
-              <div class="envio-option-desc">Coordinamos el punto de entrega por WhatsApp</div>
+              <div class="envio-option-name">🏪 Retiro en local</div>
+              <div class="envio-option-desc">Coordinamos punto de entrega por WhatsApp</div>
             </div>
             <span class="envio-option-price gratis">Gratis</span>
           </label>
-          <label class="envio-option" onclick="selectEnvio(this, 'Andreani', null)">
-            <input type="radio" name="envio" value="andreani">
+
+          <!-- OPCIÓN 2: ENVÍO -->
+          <label class="envio-option" onclick="selectEnvio(this, 'envio')">
+            <input type="radio" name="envio" value="envio">
             <div class="envio-option-info">
-              <div class="envio-option-name">Andreani</div>
-              <div class="envio-option-desc">Ingresá tu código postal para calcular</div>
+              <div class="envio-option-name">📦 Envío a domicilio</div>
+              <div class="envio-option-desc">Andreani · OCA · Correo Argentino</div>
             </div>
-            <span class="envio-option-price" id="precioAndreani">—</span>
+            <span class="envio-option-price" id="precioEnvioLabel">Calculando...</span>
           </label>
-          <label class="envio-option" onclick="selectEnvio(this, 'OCA', null)">
-            <input type="radio" name="envio" value="oca">
-            <div class="envio-option-info">
-              <div class="envio-option-name">OCA</div>
-              <div class="envio-option-desc">Ingresá tu código postal para calcular</div>
+
+        </div>
+
+        <!-- CALCULADORA DE ENVÍO -->
+        <div class="envio-calc-box" id="envioCalcBox" style="display:none;">
+          <div class="envio-cp-wrap">
+            <input type="text" class="form-control" id="inputCP"
+              placeholder="Código postal (ej: 1414)" maxlength="5"
+              oninput="calcularEnvioAuto()">
+          </div>
+          <div class="envio-resultado" id="envioResultado" style="display:none;"></div>
+          <div class="envio-tabla" id="envioTabla" style="display:none;">
+            <div class="envio-tabla-row">
+              <span class="envio-tabla-zona" id="envioZona"></span>
+              <span class="envio-tabla-metros" id="envioMetrosLabel"></span>
             </div>
-            <span class="envio-option-price" id="precioOCA">—</span>
-          </label>
+            <div class="envio-precio-final">
+              <span>Costo estimado de envío</span>
+              <strong id="envioPrecioFinal">$0</strong>
+            </div>
+            <p class="envio-nota">* Precio estimado según zona y cantidad. Para pedidos grandes coordinamos flete especial por WhatsApp.</p>
+          </div>
         </div>
-        <div class="envio-cp-wrap" id="envioCalcWrap" style="display:none;">
-          <input type="text" class="form-control" id="inputCP" placeholder="Código postal (ej: 1414)" maxlength="5">
-          <button class="btn-calcular-envio" onclick="calcularEnvio()">Calcular</button>
-        </div>
-        <div class="envio-resultado" id="envioResultado"></div>
       </div>
 
       <button class="btn-checkout" id="btnCheckout" onclick="checkout()">
@@ -2271,67 +2299,119 @@ function renderCart() {
   updateCartTotal();
 }
 
-function removeItem(idx) {
-  cart.splice(idx, 1);
+function updateQty(idx, d) {
+  cart[idx].qty = Math.max(0, cart[idx].qty + d);
+  if (cart[idx].qty === 0) cart.splice(idx, 1);
   renderCart();
+  // Recalcular envío si hay CP ingresado
+  const cp = document.getElementById('inputCP');
+  if (cp && cp.value.length >= 4 && envioSeleccionado.nombre !== 'Retiro en local') {
+    calcularEnvioAuto();
+  }
 }
 
-// ─── CHECKOUT ───
 // ─── ENVÍO ───
 let envioSeleccionado = { nombre: 'Retiro en local', costo: 0 };
 
-function selectEnvio(el, nombre, costo) {
+// Tabla de precios: [metros_hasta, CABA, GBA, Pcia_BsAs, Interior]
+const ENVIO_TABLA = [
+  [10,   4500,  6000,  8000,  11000],
+  [30,   6500,  8500,  11000, 15000],
+  [60,   9000,  12000, 15000, 20000],
+  [9999, 13000, 17000, 22000, 28000],
+];
+
+function getZona(cp) {
+  const n = parseInt(cp);
+  if (n >= 1000 && n <= 1499) return { nombre: 'CABA', idx: 0 };
+  if (n >= 1500 && n <= 1999) return { nombre: 'GBA', idx: 1 };
+  if ((n >= 2000 && n <= 2999) || (n >= 6000 && n <= 7999)) return { nombre: 'Pcia. Buenos Aires', idx: 2 };
+  if ((n >= 3000 && n <= 3999) || (n >= 5000 && n <= 5999)) return { nombre: 'Región Centro', idx: 2 };
+  if (n >= 4000 && n <= 4999) return { nombre: 'NOA / NEA', idx: 3 };
+  if (n >= 8000 && n <= 9999) return { nombre: 'Patagonia', idx: 3 };
+  return { nombre: 'Interior del país', idx: 3 };
+}
+
+function getPrecioEnvio(metros, zona) {
+  for (const fila of ENVIO_TABLA) {
+    if (metros <= fila[0]) return fila[1 + zona.idx];
+  }
+  return ENVIO_TABLA[ENVIO_TABLA.length - 1][1 + zona.idx];
+}
+
+function selectEnvio(el, tipo) {
   document.querySelectorAll('.envio-option').forEach(o => o.classList.remove('selected'));
   el.classList.add('selected');
-  envioSeleccionado.nombre = nombre;
-  envioSeleccionado.costo = costo || 0;
-  const wrap = document.getElementById('envioCalcWrap');
-  wrap.style.display = (nombre === 'Andreani' || nombre === 'OCA') ? 'flex' : 'none';
-  document.getElementById('envioResultado').style.display = 'none';
+  const calcBox = document.getElementById('envioCalcBox');
+
+  if (tipo === 'retiro') {
+    envioSeleccionado = { nombre: 'Retiro en local', costo: 0 };
+    calcBox.style.display = 'none';
+    document.getElementById('precioEnvioLabel').textContent = 'Calculando...';
+  } else {
+    calcBox.style.display = 'block';
+    const metros = getTotalMetros();
+    if (metros > 300) {
+      // Mostrar aviso de pedido grande de inmediato
+      calcularEnvioAuto();
+    } else {
+      const cp = document.getElementById('inputCP').value.trim();
+      if (cp.length >= 4) calcularEnvioAuto();
+      else document.getElementById('precioEnvioLabel').textContent = 'Ingresá tu CP';
+    }
+  }
   updateCartTotal();
 }
 
-function calcularEnvio() {
+function calcularEnvioAuto() {
   const cp = document.getElementById('inputCP').value.trim();
-  if (!cp || cp.length < 4) {
-    const res = document.getElementById('envioResultado');
-    res.textContent = 'Ingresá un código postal válido (ej: 1414).';
-    res.style.display = 'block';
+  const tabla = document.getElementById('envioTabla');
+  const resultado = document.getElementById('envioResultado');
+  const metros = getTotalMetros();
+
+  // Si supera 300cm (5 rollos de 60cm) → coordinar envío
+  if (metros > 300) {
+    tabla.style.display = 'none';
+    resultado.style.display = 'block';
+    resultado.innerHTML =
+      '<div style="background:#fff8e1;border:1px solid #ffd54f;border-radius:10px;padding:12px 14px;margin-top:8px;">' +
+        '<div style="font-weight:700;color:#e65100;font-size:13px;margin-bottom:4px;">📦 Pedido grande — más de 5 rollos</div>' +
+        '<div style="font-size:12px;color:#5d4037;line-height:1.5;">Para pedidos de esta envergadura coordinamos el envío directamente con vos.' +
+        '<br>Te contactamos por WhatsApp para acordar el mejor método y precio.</div>' +
+      '</div>';
+    document.getElementById('precioEnvioLabel').innerHTML = 'A coordinar';
+    envioSeleccionado = { nombre: 'Envío a coordinar (pedido grande)', costo: 0 };
+    updateCartTotal();
     return;
   }
 
-  const res = document.getElementById('envioResultado');
-  res.textContent = 'Calculando...';
-  res.style.display = 'block';
+  if (cp.length < 4) {
+    tabla.style.display = 'none';
+    resultado.style.display = 'none';
+    document.getElementById('precioEnvioLabel').textContent = 'Ingresá tu CP';
+    envioSeleccionado = { nombre: 'Envío a domicilio', costo: 0 };
+    updateCartTotal();
+    return;
+  }
 
-  const cpNum = parseInt(cp);
-  let costo = 0;
-  let zona = '';
+  const zona = getZona(cp);
+  const costo = getPrecioEnvio(metros, zona);
 
-  // CABA
-  if (cpNum >= 1000 && cpNum <= 1499) { costo = 3500; zona = 'CABA'; }
-  // GBA
-  else if (cpNum >= 1500 && cpNum <= 1999) { costo = 5000; zona = 'GBA'; }
-  // Buenos Aires provincia
-  else if ((cpNum >= 2000 && cpNum <= 2999) || (cpNum >= 6000 && cpNum <= 7999)) { costo = 7000; zona = 'Pcia. Buenos Aires'; }
-  // Córdoba, Santa Fe, Entre Ríos
-  else if ((cpNum >= 3000 && cpNum <= 3999) || (cpNum >= 5000 && cpNum <= 5999)) { costo = 8500; zona = 'Región Centro'; }
-  // Interior (resto del país)
-  else { costo = 10500; zona = 'Interior del país'; }
+  // Actualizar UI
+  document.getElementById('envioZona').textContent = '📍 ' + zona.nombre;
+  document.getElementById('envioMetrosLabel').textContent = metros + ' metro' + (metros !== 1 ? 's' : '') + ' · ' + Math.ceil(metros / 60) + ' rollo' + (Math.ceil(metros / 60) !== 1 ? 's' : '');
+  document.getElementById('envioPrecioFinal').textContent = '$' + costo.toLocaleString('es-AR');
+  document.getElementById('precioEnvioLabel').textContent = '$' + costo.toLocaleString('es-AR');
 
-  // Ajuste por transportista (OCA +5%)
-  if (envioSeleccionado.nombre === 'OCA') costo = Math.round(costo * 1.05);
+  tabla.style.display = 'block';
+  resultado.style.display = 'none';
 
-  envioSeleccionado.costo = costo;
-
-  res.innerHTML = '<strong>' + envioSeleccionado.nombre + '</strong> a ' + zona + ': <strong>$' + costo.toLocaleString('es-AR') + '</strong> <span style="color:var(--gray)">(estimado)</span>';
-
-  // Actualizar precio en la opción seleccionada
-  const btnId = envioSeleccionado.nombre === 'Andreani' ? 'precioAndreani' : 'precioOCA';
-  document.getElementById(btnId).textContent = '$' + costo.toLocaleString('es-AR');
-
+  envioSeleccionado = { nombre: 'Envío a domicilio (' + zona.nombre + ')', costo };
   updateCartTotal();
 }
+
+// Alias para compatibilidad
+function calcularEnvio() { calcularEnvioAuto(); }
 
 function updateCartTotal() {
   const base = getTotalPesos();
