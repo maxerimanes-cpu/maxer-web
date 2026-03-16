@@ -3206,17 +3206,48 @@ let currentUser = null;
 // Exponer funciones al scope global para que el HTML pueda llamarlas
 window._fb = { auth, db };
 
-onAuthStateChanged(auth, function(user) {
+// Ocultar botón mientras Firebase detecta el estado de sesión
+const _btnCuenta = document.getElementById('btnCuenta');
+if (_btnCuenta) _btnCuenta.style.opacity = '0';
+
+onAuthStateChanged(auth, async function(user) {
   currentUser = user;
   window._fbUser = user;
   const btn   = document.getElementById('btnCuenta');
   const label = document.getElementById('btnCuentaLabel');
   if (!btn) return;
+
+  // Mostrar el botón una vez que sabemos el estado
+  btn.style.opacity = '1';
+  btn.style.transition = 'opacity .3s';
+
   if (user) {
     const nombre = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
     label.textContent = nombre;
     btn.classList.add('logged-in');
     btn.onclick = function() { window._openPortal(); };
+
+    // Precargar datos del cliente en el formulario del carrito
+    try {
+      const snap = await getDoc(doc(db, 'clientes', user.uid));
+      if (snap.exists()) {
+        const d = snap.data();
+        // Precompletar formulario de checkout si está vacío
+        const campoNombre = document.getElementById('cartNombre');
+        const campoTel    = document.getElementById('cartTel');
+        const campoEmail  = document.getElementById('cartEmail');
+        const campoDir    = document.getElementById('cartDir');
+        if (campoNombre && !campoNombre.value) campoNombre.value = d.nombre    || '';
+        if (campoTel    && !campoTel.value)    campoTel.value    = d.telefono  || '';
+        if (campoEmail  && !campoEmail.value)  campoEmail.value  = d.email     || user.email;
+        if (campoDir    && !campoDir.value)    campoDir.value    = d.direccion || '';
+      } else {
+        // Si no tiene perfil, al menos poner el email
+        const campoEmail = document.getElementById('cartEmail');
+        if (campoEmail && !campoEmail.value) campoEmail.value = user.email;
+      }
+    } catch(e) {}
+
   } else {
     label.textContent = 'Mi cuenta';
     btn.classList.remove('logged-in');
