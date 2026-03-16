@@ -1070,7 +1070,199 @@ body {
   font-style: italic; margin: 0;
 }
 
-/* ─── ORDER SUMMARY DROPDOWN ─── */
+/* ─── BOTÓN MI CUENTA ─── */
+.btn-cuenta {
+  position: relative;
+  background: transparent; color: var(--navy);
+  border: 1.5px solid var(--border); border-radius: 100px; padding: 9px 16px;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  display: inline-flex; align-items: center; gap: 7px;
+  transition: all .2s;
+}
+.btn-cuenta:hover { border-color: var(--navy); background: var(--off); }
+.btn-cuenta.logged-in { background: var(--navy); color: white; border-color: var(--navy); }
+
+/* ─── AUTH MODAL ─── */
+.auth-overlay {
+  display: none; position: fixed; inset: 0; z-index: 900;
+  background: rgba(13,21,48,.6); backdrop-filter: blur(6px);
+  align-items: center; justify-content: center; padding: 20px;
+}
+.auth-overlay.active { display: flex; }
+
+.auth-modal {
+  background: white; border-radius: 24px;
+  width: 100%; max-width: 420px;
+  overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,.2);
+  animation: modalIn .3s cubic-bezier(.34,1.1,.64,1);
+}
+
+.auth-header {
+  background: var(--navy); padding: 20px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.auth-header h2 {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 18px; font-weight: 800; color: white;
+}
+.auth-close {
+  background: rgba(255,255,255,.1); border: none; border-radius: 50%;
+  width: 30px; height: 30px; cursor: pointer; color: white;
+  font-size: 16px; display: flex; align-items: center; justify-content: center;
+  transition: background .2s;
+}
+.auth-close:hover { background: rgba(255,255,255,.2); }
+
+.auth-body { padding: 24px; }
+
+.auth-tabs {
+  display: flex; gap: 4px; background: var(--off);
+  border-radius: 12px; padding: 4px; margin-bottom: 20px;
+}
+.auth-tab {
+  flex: 1; padding: 9px; border: none; border-radius: 9px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  background: transparent; color: var(--gray); transition: all .2s;
+}
+.auth-tab.active { background: white; color: var(--navy); box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+
+.auth-form { display: flex; flex-direction: column; gap: 12px; }
+.auth-form .form-group { margin-bottom: 0; }
+
+.btn-auth-submit {
+  width: 100%; padding: 14px; background: var(--navy); color: white;
+  border: none; border-radius: 100px; font-size: 14px; font-weight: 700;
+  cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;
+  transition: all .2s; margin-top: 4px;
+}
+.btn-auth-submit:hover { background: var(--coral); }
+.btn-auth-submit:disabled { opacity: .6; cursor: not-allowed; }
+
+.auth-divider {
+  text-align: center; font-size: 12px; color: var(--gray);
+  position: relative; margin: 12px 0;
+}
+.auth-divider::before, .auth-divider::after {
+  content: ''; position: absolute; top: 50%; height: 1px;
+  background: var(--border); width: 42%;
+}
+.auth-divider::before { left: 0; }
+.auth-divider::after { right: 0; }
+
+.btn-google {
+  width: 100%; padding: 12px; background: white; color: #333;
+  border: 1.5px solid var(--border); border-radius: 100px;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: all .2s;
+}
+.btn-google:hover { border-color: var(--navy); background: var(--off); }
+.btn-google img { width: 18px; height: 18px; }
+
+.auth-error {
+  background: #fff0f0; border: 1px solid #ffcdd2; border-radius: 10px;
+  padding: 10px 12px; font-size: 12px; color: #c62828;
+  display: none; margin-bottom: 8px;
+}
+
+/* ─── PORTAL MI CUENTA ─── */
+.portal-overlay {
+  display: none; position: fixed; inset: 0; z-index: 800;
+  background: rgba(13,21,48,.5); backdrop-filter: blur(4px);
+}
+.portal-overlay.active { display: block; }
+
+.portal-drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; z-index: 850;
+  width: 100%; max-width: 520px;
+  background: white; box-shadow: -20px 0 60px rgba(0,0,0,.15);
+  display: flex; flex-direction: column;
+  transform: translateX(100%);
+  transition: transform .35s cubic-bezier(.25,.8,.25,1);
+  overflow: hidden;
+}
+.portal-drawer.active { transform: translateX(0); }
+
+.portal-header {
+  background: var(--navy); padding: 20px 24px; flex-shrink: 0;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.portal-header h2 {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 18px; font-weight: 800; color: white;
+  display: flex; align-items: center; gap: 10px;
+}
+.portal-user-email {
+  font-size: 11px; font-weight: 400; color: rgba(255,255,255,.6);
+  display: block; margin-top: 2px;
+}
+.portal-close {
+  background: rgba(255,255,255,.1); border: none; border-radius: 50%;
+  width: 32px; height: 32px; cursor: pointer; color: white;
+  font-size: 18px; display: flex; align-items: center; justify-content: center;
+  transition: background .2s;
+}
+.portal-close:hover { background: rgba(255,255,255,.2); }
+
+.portal-body { flex: 1; overflow-y: auto; padding: 20px; }
+
+.portal-section { margin-bottom: 24px; }
+.portal-section-title {
+  font-size: 11px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--gray); margin-bottom: 12px;
+}
+
+.portal-pedido {
+  background: var(--off); border-radius: 14px; padding: 16px;
+  margin-bottom: 10px; border: 1.5px solid var(--border);
+  transition: border-color .2s;
+}
+.portal-pedido:hover { border-color: var(--navy); }
+.portal-pedido-header {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 10px;
+}
+.portal-pedido-fecha { font-size: 11px; color: var(--gray); }
+.portal-pedido-estado {
+  font-size: 11px; font-weight: 700; padding: 3px 10px;
+  border-radius: 100px; background: var(--teal); color: var(--dark);
+}
+.portal-pedido-estado.pendiente { background: #fff3cd; color: #856404; }
+.portal-pedido-estado.coordinando { background: #cce5ff; color: #004085; }
+.portal-pedido-items { font-size: 13px; color: var(--navy); font-weight: 600; margin-bottom: 8px; }
+.portal-pedido-total {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 18px; font-weight: 800; color: var(--coral);
+}
+.btn-repetir {
+  background: var(--navy); color: white; border: none;
+  border-radius: 100px; padding: 8px 16px; font-size: 12px; font-weight: 700;
+  cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;
+  transition: background .2s; margin-top: 10px;
+}
+.btn-repetir:hover { background: var(--coral); }
+
+.portal-empty {
+  text-align: center; padding: 40px 20px; color: var(--gray);
+}
+.portal-empty-icon { font-size: 48px; margin-bottom: 12px; }
+.portal-empty h3 { font-family: 'Bricolage Grotesque', sans-serif; font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+
+.portal-footer {
+  padding: 16px 20px; border-top: 1px solid var(--border); flex-shrink: 0;
+}
+.btn-logout {
+  width: 100%; padding: 12px; background: var(--off); color: var(--gray);
+  border: 1.5px solid var(--border); border-radius: 100px;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  font-family: 'Plus Jakarta Sans', sans-serif; transition: all .2s;
+}
+.btn-logout:hover { background: #fff0f0; color: var(--coral); border-color: var(--coral); }
+
+
 .order-summary-dropdown {
   border-bottom: 1px solid var(--border);
   background: var(--off);
@@ -1413,6 +1605,11 @@ body {
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
         WhatsApp
       </a>
+      <!-- BOTÓN MI CUENTA -->
+      <button class="btn-cuenta" id="btnCuenta" onclick="window._openAuthModal()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+        <span id="btnCuentaLabel">Mi cuenta</span>
+      </button>
       <button class="cart-nav-btn" onclick="openCart()">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96C5 16.1 5.9 17 7 17h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63H19c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1 1 0 0023.46 4H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
         Carrito
@@ -2097,6 +2294,72 @@ body {
   </div>
 </div>
 
+<!-- ─── AUTH MODAL ─── -->
+<div class="auth-overlay" id="authOverlay" onclick="window._closeAuthIfOutside(event)">
+  <div class="auth-modal">
+    <div class="auth-header">
+      <h2 id="authTitle">Mi cuenta</h2>
+      <button class="auth-close" onclick="window._closeAuthModal()">✕</button>
+    </div>
+    <div class="auth-body">
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tabLogin" onclick="window._switchAuthTab('login')">Iniciar sesión</button>
+        <button class="auth-tab" id="tabRegister" onclick="window._switchAuthTab('register')">Registrarse</button>
+      </div>
+      <div class="auth-error" id="authError"></div>
+      <div class="auth-form">
+        <div class="form-group" id="authNombreGroup" style="display:none;">
+          <label class="form-label">Nombre</label>
+          <input type="text" class="form-control" id="authNombre" placeholder="Juan García">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-control" id="authEmail" placeholder="tu@email.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Contraseña</label>
+          <input type="password" class="form-control" id="authPassword" placeholder="Mínimo 6 caracteres">
+        </div>
+        <button class="btn-auth-submit" id="btnAuthSubmit" onclick="window._submitAuth()">Iniciar sesión</button>
+      </div>
+      <div class="auth-divider">o continuá con</div>
+      <button class="btn-google" onclick="window._loginGoogle()">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Continuar con Google
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── PORTAL MI CUENTA ─── -->
+<div class="portal-overlay" id="portalOverlay" onclick="window._closePortal()"></div>
+<div class="portal-drawer" id="portalDrawer">
+  <div class="portal-header">
+    <div>
+      <h2>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+        Mi cuenta
+      </h2>
+      <span class="portal-user-email" id="portalEmail"></span>
+    </div>
+    <button class="portal-close" onclick="window._closePortal()">✕</button>
+  </div>
+  <div class="portal-body">
+    <div class="portal-section">
+      <div class="portal-section-title">Mis pedidos</div>
+      <div id="portalPedidos">
+        <div class="portal-empty">
+          <div class="portal-empty-icon">📦</div>
+          <h3>Cargando pedidos...</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="portal-footer">
+    <button class="btn-logout" onclick="window._logoutUser()">Cerrar sesión</button>
+  </div>
+</div>
+
 <script>
 // ─── CONFIG ───
 const CONFIG = {
@@ -2660,6 +2923,8 @@ function showNotif(msg) {
           body: JSON.stringify(pedido),
           mode: 'no-cors'
         }).catch(e => console.warn('Make:', e));
+        // Guardar en Firebase
+        window._guardarPedidoFirebase && window._guardarPedidoFirebase(pedido);
         sessionStorage.removeItem('pedido_pendiente');
       } catch(e) { console.warn('Parse pedido:', e); }
     }
@@ -2694,7 +2959,8 @@ function showNotif(msg) {
   }
 })();
 
-// ─── SCROLL SUAVE ───
+// ─── FUNCIONES GLOBALES OK (script normal) ───
+
 document.querySelectorAll('a[href^="#"]').forEach(function(a) {
   a.addEventListener('click', function(e) {
     const t = document.querySelector(a.getAttribute('href'));
@@ -2711,6 +2977,225 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a) {
   }, { threshold: 0.12, rootMargin: '0px 0px -48px 0px' });
   document.querySelectorAll('.reveal, .reveal-stagger').forEach(function(el) { obs.observe(el); });
 })();
+
+</script>
+
+<!-- ─── FIREBASE (script módulo separado) ─── -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, updateProfile } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, collection, addDoc, query, where, orderBy, getDocs, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCTR1Mh-McKYxhmxOwssljX9Luz6DDx1Ks",
+  authDomain: "maxer-ae7e9.firebaseapp.com",
+  projectId: "maxer-ae7e9",
+  storageBucket: "maxer-ae7e9.firebasestorage.app",
+  messagingSenderId: "563702313972",
+  appId: "1:563702313972:web:6b60cd1988d9ef922c7fa1"
+};
+
+const fbApp = initializeApp(firebaseConfig);
+const auth  = getAuth(fbApp);
+const db    = getFirestore(fbApp);
+let currentUser = null;
+
+// Exponer funciones al scope global para que el HTML pueda llamarlas
+window._fb = { auth, db };
+
+onAuthStateChanged(auth, function(user) {
+  currentUser = user;
+  window._fbUser = user;
+  const btn   = document.getElementById('btnCuenta');
+  const label = document.getElementById('btnCuentaLabel');
+  if (!btn) return;
+  if (user) {
+    const nombre = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
+    label.textContent = nombre;
+    btn.classList.add('logged-in');
+    btn.onclick = function() { window._openPortal(); };
+  } else {
+    label.textContent = 'Mi cuenta';
+    btn.classList.remove('logged-in');
+    btn.onclick = function() { window._openAuthModal(); };
+  }
+});
+
+let authTab = 'login';
+
+window._openAuthModal = function() {
+  document.getElementById('authOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+};
+
+window._closeAuthModal = function() {
+  document.getElementById('authOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+  document.getElementById('authError').style.display = 'none';
+  document.getElementById('authEmail').value = '';
+  document.getElementById('authPassword').value = '';
+  document.getElementById('authNombre').value = '';
+};
+
+window._closeAuthIfOutside = function(e) {
+  if (e.target === document.getElementById('authOverlay')) window._closeAuthModal();
+};
+
+window._switchAuthTab = function(tab) {
+  authTab = tab;
+  document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+  document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+  document.getElementById('authNombreGroup').style.display = tab === 'register' ? 'block' : 'none';
+  document.getElementById('btnAuthSubmit').textContent = tab === 'login' ? 'Iniciar sesión' : 'Crear cuenta';
+  document.getElementById('authError').style.display = 'none';
+};
+
+window._submitAuth = async function() {
+  const email    = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPassword').value;
+  const nombre   = document.getElementById('authNombre').value.trim();
+  const btn      = document.getElementById('btnAuthSubmit');
+
+  if (!email || !password) { window._showAuthError('Completá email y contraseña.'); return; }
+  if (authTab === 'register' && !nombre) { window._showAuthError('Ingresá tu nombre.'); return; }
+  if (password.length < 6) { window._showAuthError('La contraseña debe tener al menos 6 caracteres.'); return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Procesando...';
+  document.getElementById('authError').style.display = 'none';
+
+  try {
+    if (authTab === 'login') {
+      await signInWithEmailAndPassword(auth, email, password);
+    } else {
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+      await updateProfile(cred.user, { displayName: nombre });
+      await setDoc(doc(db, 'clientes', cred.user.uid), {
+        nombre, email, uid: cred.user.uid,
+        fechaRegistro: new Date().toISOString()
+      });
+    }
+    window._closeAuthModal();
+    if (typeof showNotif === 'function') showNotif('¡Bienvenido! Sesión iniciada correctamente.');
+  } catch(err) {
+    const msgs = {
+      'auth/email-already-in-use': 'Este email ya tiene una cuenta. Iniciá sesión.',
+      'auth/invalid-email': 'El email no es válido.',
+      'auth/wrong-password': 'Contraseña incorrecta.',
+      'auth/user-not-found': 'No encontramos una cuenta con ese email.',
+      'auth/invalid-credential': 'Email o contraseña incorrectos.',
+      'auth/too-many-requests': 'Demasiados intentos. Esperá unos minutos.'
+    };
+    window._showAuthError(msgs[err.code] || 'Error: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = authTab === 'login' ? 'Iniciar sesión' : 'Crear cuenta';
+  }
+};
+
+window._loginGoogle = async function() {
+  const provider = new GoogleAuthProvider();
+  try {
+    const cred = await signInWithPopup(auth, provider);
+    const ref  = doc(db, 'clientes', cred.user.uid);
+    const snap = await getDoc(ref);
+    if (!snap.exists()) {
+      await setDoc(ref, {
+        nombre: cred.user.displayName || '',
+        email: cred.user.email,
+        uid: cred.user.uid,
+        fechaRegistro: new Date().toISOString()
+      });
+    }
+    window._closeAuthModal();
+    if (typeof showNotif === 'function') showNotif('¡Bienvenido! Sesión iniciada con Google.');
+  } catch(err) {
+    if (err.code !== 'auth/popup-closed-by-user') window._showAuthError('Error con Google: ' + err.message);
+  }
+};
+
+window._showAuthError = function(msg) {
+  const el = document.getElementById('authError');
+  el.textContent = msg;
+  el.style.display = 'block';
+};
+
+window._logoutUser = async function() {
+  await signOut(auth);
+  window._closePortal();
+  if (typeof showNotif === 'function') showNotif('Sesión cerrada.');
+};
+
+window._openPortal = async function() {
+  if (!currentUser) { window._openAuthModal(); return; }
+  document.getElementById('portalOverlay').classList.add('active');
+  document.getElementById('portalDrawer').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('portalEmail').textContent = currentUser.email;
+  await window._cargarPedidos();
+};
+
+window._closePortal = function() {
+  document.getElementById('portalOverlay').classList.remove('active');
+  document.getElementById('portalDrawer').classList.remove('active');
+  document.body.style.overflow = '';
+};
+
+window._cargarPedidos = async function() {
+  const cont = document.getElementById('portalPedidos');
+  cont.innerHTML = '<div class="portal-empty"><div class="portal-empty-icon">⏳</div><h3>Cargando...</h3></div>';
+  try {
+    const q    = query(collection(db, 'pedidos'), where('uid', '==', currentUser.uid), orderBy('fecha', 'desc'));
+    const snap = await getDocs(q);
+    if (snap.empty) {
+      cont.innerHTML = '<div class="portal-empty"><div class="portal-empty-icon">📦</div><h3>Todavía no tenés pedidos</h3><p>Cuando completes tu primera compra aparecerá acá.</p></div>';
+      return;
+    }
+    cont.innerHTML = '';
+    snap.forEach(function(docSnap) {
+      const p = docSnap.data();
+      const estadoClass = p.estado && p.estado.includes('aprobado') ? '' : 'pendiente';
+      const el = document.createElement('div');
+      el.className = 'portal-pedido';
+      el.innerHTML =
+        '<div class="portal-pedido-header">' +
+          '<span class="portal-pedido-fecha">' + (p.fecha || '') + '</span>' +
+          '<span class="portal-pedido-estado ' + estadoClass + '">' + (p.estado || 'Pendiente') + '</span>' +
+        '</div>' +
+        '<div class="portal-pedido-items">' + (p.items || '—') + '</div>' +
+        '<div class="portal-pedido-total">' + (p.total || '') + '</div>' +
+        '<button class="btn-repetir" onclick="window._repetirPedido(' + JSON.stringify(p.itemsRaw || []) + ')">🔁 Repetir pedido</button>';
+      cont.appendChild(el);
+    });
+  } catch(err) {
+    cont.innerHTML = '<div class="portal-empty"><div class="portal-empty-icon">⚠️</div><h3>Error al cargar pedidos</h3><p>' + err.message + '</p></div>';
+  }
+};
+
+window._repetirPedido = function(items) {
+  if (!items || items.length === 0) { if (typeof showNotif === 'function') showNotif('No se puede repetir este pedido.'); return; }
+  window.cart = items.map(function(i) { return { id: i.id, name: i.name, img: i.img || '', qty: i.qty, precioBase: i.precioBase }; });
+  if (typeof renderCart === 'function') renderCart();
+  window._closePortal();
+  if (typeof openCart === 'function') openCart();
+  if (typeof showNotif === 'function') showNotif('Pedido cargado al carrito.');
+};
+
+window._guardarPedidoFirebase = async function(pedido) {
+  if (!currentUser) return;
+  try {
+    const itemsRaw = (window.cart || []).map(function(i) {
+      return { id: i.id, name: i.name, img: i.img, qty: i.qty, precioBase: i.precioBase };
+    });
+    await addDoc(collection(db, 'pedidos'), {
+      uid: currentUser.uid, email: currentUser.email,
+      fecha: pedido.fecha, nombre: pedido.nombre, telefono: pedido.telefono,
+      direccion: pedido.direccion, envio: pedido.envio, items: pedido.items,
+      itemsRaw, total: pedido.total, descuento: pedido.descuento,
+      canal: pedido.canal, estado: pedido.estado, referencia: pedido.referencia
+    });
+  } catch(err) { console.warn('Firebase pedido:', err); }
+};
 </script>
 
 </body>
