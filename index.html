@@ -1186,19 +1186,22 @@ body {
 }
 .portal-drawer.active { transform: translateX(0); }
 
+/* Header */
 .portal-header {
   background: var(--navy); padding: 20px 24px; flex-shrink: 0;
   display: flex; justify-content: space-between; align-items: center;
 }
-.portal-header h2 {
+.portal-header-user { display: flex; align-items: center; gap: 14px; }
+.portal-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--teal); color: var(--dark);
   font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 18px; font-weight: 800; color: white;
-  display: flex; align-items: center; gap: 10px;
+  font-size: 20px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
 }
-.portal-user-email {
-  font-size: 11px; font-weight: 400; color: rgba(255,255,255,.6);
-  display: block; margin-top: 2px;
-}
+.portal-header-name { font-family: 'Bricolage Grotesque', sans-serif; font-size: 16px; font-weight: 800; color: white; }
+.portal-user-email { font-size: 11px; color: rgba(255,255,255,.55); margin-top: 2px; display: block; }
 .portal-close {
   background: rgba(255,255,255,.1); border: none; border-radius: 50%;
   width: 32px; height: 32px; cursor: pointer; color: white;
@@ -1207,14 +1210,78 @@ body {
 }
 .portal-close:hover { background: rgba(255,255,255,.2); }
 
-.portal-body { flex: 1; overflow-y: auto; padding: 20px; }
+/* Tabs */
+.portal-tabs {
+  display: flex; background: var(--off); border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.portal-tab {
+  flex: 1; padding: 14px 8px; border: none; background: transparent;
+  font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 600;
+  color: var(--gray); cursor: pointer; transition: all .2s;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  border-bottom: 2px solid transparent;
+}
+.portal-tab:hover { color: var(--navy); background: rgba(0,0,0,.03); }
+.portal-tab.active { color: var(--navy); border-bottom-color: var(--teal); background: white; }
+.portal-tab svg { opacity: .6; }
+.portal-tab.active svg { opacity: 1; }
 
-.portal-section { margin-bottom: 24px; }
-.portal-section-title {
+/* Panels */
+.portal-body { flex: 1; overflow: hidden; position: relative; }
+.portal-panel {
+  display: none; height: 100%; overflow-y: auto; padding: 20px;
+}
+.portal-panel.active { display: block; }
+
+/* Profile card */
+.portal-profile-card {
+  display: flex; align-items: center; gap: 16px;
+  background: var(--off); border-radius: 16px; padding: 20px;
+  margin-bottom: 20px;
+}
+.portal-avatar-lg {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);
+  color: var(--teal); font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 28px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.portal-profile-name { font-family: 'Bricolage Grotesque', sans-serif; font-size: 18px; font-weight: 800; color: var(--navy); }
+.portal-profile-email { font-size: 13px; color: var(--gray); margin-top: 2px; }
+
+/* Info sections */
+.portal-info-section { margin-bottom: 20px; }
+.portal-info-title {
   font-size: 11px; font-weight: 700; letter-spacing: 1px;
   text-transform: uppercase; color: var(--gray); margin-bottom: 12px;
 }
+.portal-info-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 11px 14px; background: var(--off); border-radius: 10px;
+  margin-bottom: 6px;
+}
+.portal-info-label { font-size: 12px; color: var(--gray); font-weight: 500; }
+.portal-info-value { font-size: 13px; color: var(--navy); font-weight: 600; max-width: 60%; text-align: right; }
 
+/* Stats */
+.portal-stats {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 10px;
+  margin-top: 20px;
+}
+.portal-stat-item {
+  background: var(--off); border-radius: 12px; padding: 16px 12px;
+  text-align: center;
+}
+.portal-stat-num {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 22px; font-weight: 800; color: var(--coral); display: block;
+}
+.portal-stat-label { font-size: 11px; color: var(--gray); margin-top: 4px; display: block; }
+
+/* Orders */
+.portal-orders-header { margin-bottom: 16px; }
 .portal-pedido {
   background: var(--off); border-radius: 14px; padding: 16px;
   margin-bottom: 10px; border: 1.5px solid var(--border);
@@ -1222,45 +1289,69 @@ body {
 }
 .portal-pedido:hover { border-color: var(--navy); }
 .portal-pedido-header {
-  display: flex; justify-content: space-between; align-items: flex-start;
-  margin-bottom: 10px;
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 8px;
 }
 .portal-pedido-fecha { font-size: 11px; color: var(--gray); }
 .portal-pedido-estado {
-  font-size: 11px; font-weight: 700; padding: 3px 10px;
+  font-size: 10px; font-weight: 700; padding: 3px 10px;
   border-radius: 100px; background: var(--teal); color: var(--dark);
+  letter-spacing: .5px;
 }
 .portal-pedido-estado.pendiente { background: #fff3cd; color: #856404; }
-.portal-pedido-estado.coordinando { background: #cce5ff; color: #004085; }
-.portal-pedido-items { font-size: 13px; color: var(--navy); font-weight: 600; margin-bottom: 8px; }
+.portal-pedido-items {
+  font-size: 13px; color: var(--navy); font-weight: 600;
+  margin-bottom: 4px; line-height: 1.4;
+}
+.portal-pedido-envio { font-size: 11px; color: var(--gray); margin-bottom: 10px; }
+.portal-pedido-footer { display: flex; justify-content: space-between; align-items: center; }
 .portal-pedido-total {
   font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 18px; font-weight: 800; color: var(--coral);
+  font-size: 20px; font-weight: 800; color: var(--coral);
 }
 .btn-repetir {
   background: var(--navy); color: white; border: none;
   border-radius: 100px; padding: 8px 16px; font-size: 12px; font-weight: 700;
   cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;
-  transition: background .2s; margin-top: 10px;
+  transition: background .2s; display: flex; align-items: center; gap: 5px;
 }
 .btn-repetir:hover { background: var(--coral); }
+
+/* Config */
+.btn-save-config {
+  width: 100%; padding: 13px; background: var(--teal); color: var(--dark);
+  border: none; border-radius: 100px; font-size: 14px; font-weight: 800;
+  cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;
+  transition: all .2s; margin-top: 4px;
+}
+.btn-save-config:hover { background: var(--teal2); }
+.cfg-saved { font-size: 13px; color: #1a7a52; margin-top: 10px; text-align: center; }
+
+/* Toggle switch */
+.portal-toggle-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px; background: var(--off); border-radius: 10px; margin-bottom: 8px;
+}
+.toggle-switch { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute; inset: 0; background: var(--border);
+  border-radius: 100px; cursor: pointer; transition: .3s;
+}
+.toggle-slider::before {
+  content: ''; position: absolute; height: 18px; width: 18px;
+  left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: .3s;
+}
+.toggle-switch input:checked + .toggle-slider { background: var(--teal); }
+.toggle-switch input:checked + .toggle-slider::before { transform: translateX(20px); }
 
 .portal-empty {
   text-align: center; padding: 40px 20px; color: var(--gray);
 }
 .portal-empty-icon { font-size: 48px; margin-bottom: 12px; }
 .portal-empty h3 { font-family: 'Bricolage Grotesque', sans-serif; font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+.portal-empty p { font-size: 13px; }
 
-.portal-footer {
-  padding: 16px 20px; border-top: 1px solid var(--border); flex-shrink: 0;
-}
-.btn-logout {
-  width: 100%; padding: 12px; background: var(--off); color: var(--gray);
-  border: 1.5px solid var(--border); border-radius: 100px;
-  font-size: 13px; font-weight: 600; cursor: pointer;
-  font-family: 'Plus Jakarta Sans', sans-serif; transition: all .2s;
-}
-.btn-logout:hover { background: #fff0f0; color: var(--coral); border-color: var(--coral); }
 
 
 .order-summary-dropdown {
@@ -2334,31 +2425,142 @@ body {
 <!-- ─── PORTAL MI CUENTA ─── -->
 <div class="portal-overlay" id="portalOverlay" onclick="window._closePortal()"></div>
 <div class="portal-drawer" id="portalDrawer">
+
+  <!-- HEADER CON AVATAR -->
   <div class="portal-header">
-    <div>
-      <h2>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
-        Mi cuenta
-      </h2>
-      <span class="portal-user-email" id="portalEmail"></span>
+    <div class="portal-header-user">
+      <div class="portal-avatar" id="portalAvatar">M</div>
+      <div>
+        <div class="portal-header-name" id="portalName">Mi cuenta</div>
+        <div class="portal-user-email" id="portalEmail"></div>
+      </div>
     </div>
     <button class="portal-close" onclick="window._closePortal()">✕</button>
   </div>
+
+  <!-- TABS NAVEGACIÓN -->
+  <div class="portal-tabs">
+    <button class="portal-tab active" id="ptab-perfil" onclick="window._switchPortalTab('perfil')">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+      Perfil
+    </button>
+    <button class="portal-tab" id="ptab-pedidos" onclick="window._switchPortalTab('pedidos')">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg>
+      Mis pedidos
+    </button>
+    <button class="portal-tab" id="ptab-config" onclick="window._switchPortalTab('config')">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+      Configuración
+    </button>
+  </div>
+
+  <!-- CONTENIDO DE TABS -->
   <div class="portal-body">
-    <div class="portal-section">
-      <div class="portal-section-title">Mis pedidos</div>
-      <div id="portalPedidos">
-        <div class="portal-empty">
-          <div class="portal-empty-icon">📦</div>
-          <h3>Cargando pedidos...</h3>
+
+    <!-- TAB: PERFIL -->
+    <div class="portal-panel active" id="ppanel-perfil">
+      <div class="portal-profile-card">
+        <div class="portal-avatar-lg" id="portalAvatarLg">M</div>
+        <div class="portal-profile-info">
+          <div class="portal-profile-name" id="portalNameDisplay">—</div>
+          <div class="portal-profile-email" id="portalEmailDisplay">—</div>
+        </div>
+      </div>
+
+      <div class="portal-info-section">
+        <div class="portal-info-title">Mis datos</div>
+        <div class="portal-info-row">
+          <span class="portal-info-label">Nombre</span>
+          <span class="portal-info-value" id="piNombre">—</span>
+        </div>
+        <div class="portal-info-row">
+          <span class="portal-info-label">Email</span>
+          <span class="portal-info-value" id="piEmail">—</span>
+        </div>
+        <div class="portal-info-row">
+          <span class="portal-info-label">Teléfono</span>
+          <span class="portal-info-value" id="piTelefono">Sin completar</span>
+        </div>
+        <div class="portal-info-row">
+          <span class="portal-info-label">Dirección</span>
+          <span class="portal-info-value" id="piDireccion">Sin completar</span>
+        </div>
+      </div>
+
+      <div class="portal-stats">
+        <div class="portal-stat-item">
+          <span class="portal-stat-num" id="piTotalPedidos">0</span>
+          <span class="portal-stat-label">Pedidos</span>
+        </div>
+        <div class="portal-stat-item">
+          <span class="portal-stat-num" id="piTotalGastado">$0</span>
+          <span class="portal-stat-label">Total gastado</span>
+        </div>
+        <div class="portal-stat-item">
+          <span class="portal-stat-num" id="piMiembro">—</span>
+          <span class="portal-stat-label">Miembro desde</span>
         </div>
       </div>
     </div>
-  </div>
-  <div class="portal-footer">
-    <button class="btn-logout" onclick="window._logoutUser()">Cerrar sesión</button>
+
+    <!-- TAB: PEDIDOS -->
+    <div class="portal-panel" id="ppanel-pedidos">
+      <div class="portal-orders-header">
+        <div class="portal-info-title">Historial de compras</div>
+      </div>
+      <div id="portalPedidos">
+        <div class="portal-empty">
+          <div class="portal-empty-icon">📦</div>
+          <h3>Cargando...</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: CONFIGURACIÓN -->
+    <div class="portal-panel" id="ppanel-config">
+      <div class="portal-info-section">
+        <div class="portal-info-title">Editar datos</div>
+        <div class="form-group">
+          <label class="form-label">Nombre</label>
+          <input type="text" class="form-control" id="cfgNombre" placeholder="Tu nombre completo">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Teléfono</label>
+          <input type="tel" class="form-control" id="cfgTelefono" placeholder="11 1234-5678">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Dirección habitual</label>
+          <input type="text" class="form-control" id="cfgDireccion" placeholder="Av. Corrientes 1234, CABA">
+        </div>
+        <button class="btn-save-config" id="btnSaveConfig" onclick="window._saveConfig()">Guardar cambios</button>
+        <div class="cfg-saved" id="cfgSaved" style="display:none;">✅ Datos guardados correctamente</div>
+      </div>
+
+      <div class="portal-info-section" style="margin-top:20px;">
+        <div class="portal-info-title">Notificaciones</div>
+        <div class="portal-toggle-row">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--navy)">Emails de confirmación</div>
+            <div style="font-size:11px;color:var(--gray)">Recibir email cuando se apruebe un pago</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="cfgEmailNotif" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="portal-info-section" style="margin-top:20px;">
+        <div class="portal-info-title">Cuenta</div>
+        <button class="btn-logout" onclick="window._logoutUser()" style="margin-bottom:10px;">
+          Cerrar sesión
+        </button>
+      </div>
+    </div>
+
   </div>
 </div>
+
 
 <script>
 // ─── CONFIG ───
@@ -3126,12 +3328,51 @@ window._logoutUser = async function() {
   if (typeof showNotif === 'function') showNotif('Sesión cerrada.');
 };
 
+// ─── PORTAL — TABS ───
+window._switchPortalTab = function(tab) {
+  ['perfil','pedidos','config'].forEach(function(t) {
+    document.getElementById('ptab-' + t).classList.toggle('active', t === tab);
+    document.getElementById('ppanel-' + t).classList.toggle('active', t === tab);
+  });
+};
+
 window._openPortal = async function() {
   if (!currentUser) { window._openAuthModal(); return; }
   document.getElementById('portalOverlay').classList.add('active');
   document.getElementById('portalDrawer').classList.add('active');
   document.body.style.overflow = 'hidden';
-  document.getElementById('portalEmail').textContent = currentUser.email;
+
+  // Header
+  const nombre = currentUser.displayName || currentUser.email.split('@')[0];
+  const inicial = nombre.charAt(0).toUpperCase();
+  document.getElementById('portalAvatar').textContent    = inicial;
+  document.getElementById('portalAvatarLg').textContent  = inicial;
+  document.getElementById('portalName').textContent      = nombre;
+  document.getElementById('portalEmail').textContent     = currentUser.email;
+  document.getElementById('portalNameDisplay').textContent  = nombre;
+  document.getElementById('portalEmailDisplay').textContent = currentUser.email;
+
+  // Cargar datos del cliente desde Firestore
+  try {
+    const snap = await getDoc(doc(db, 'clientes', currentUser.uid));
+    const datos = snap.exists() ? snap.data() : {};
+    document.getElementById('piNombre').textContent    = datos.nombre   || nombre;
+    document.getElementById('piEmail').textContent     = datos.email    || currentUser.email;
+    document.getElementById('piTelefono').textContent  = datos.telefono || 'Sin completar';
+    document.getElementById('piDireccion').textContent = datos.direccion|| 'Sin completar';
+    // Prefill config form
+    document.getElementById('cfgNombre').value    = datos.nombre    || nombre;
+    document.getElementById('cfgTelefono').value  = datos.telefono  || '';
+    document.getElementById('cfgDireccion').value = datos.direccion || '';
+    // Fecha registro
+    if (datos.fechaRegistro) {
+      const d = new Date(datos.fechaRegistro);
+      document.getElementById('piMiembro').textContent = d.toLocaleDateString('es-AR', { month: 'short', year: 'numeric' });
+    }
+  } catch(e) {}
+
+  // Tab por defecto: perfil
+  window._switchPortalTab('perfil');
   await window._cargarPedidos();
 };
 
@@ -3147,13 +3388,22 @@ window._cargarPedidos = async function() {
   try {
     const q    = query(collection(db, 'pedidos'), where('uid', '==', currentUser.uid), orderBy('fecha', 'desc'));
     const snap = await getDocs(q);
+
     if (snap.empty) {
       cont.innerHTML = '<div class="portal-empty"><div class="portal-empty-icon">📦</div><h3>Todavía no tenés pedidos</h3><p>Cuando completes tu primera compra aparecerá acá.</p></div>';
+      document.getElementById('piTotalPedidos').textContent = '0';
+      document.getElementById('piTotalGastado').textContent = '$0';
       return;
     }
+
+    let totalGastado = 0;
     cont.innerHTML = '';
     snap.forEach(function(docSnap) {
       const p = docSnap.data();
+      // Sumar total gastado
+      const num = parseInt((p.total || '0').replace(/[^0-9]/g, ''));
+      if (!isNaN(num)) totalGastado += num;
+
       const estadoClass = p.estado && p.estado.includes('aprobado') ? '' : 'pendiente';
       const el = document.createElement('div');
       el.className = 'portal-pedido';
@@ -3163,12 +3413,49 @@ window._cargarPedidos = async function() {
           '<span class="portal-pedido-estado ' + estadoClass + '">' + (p.estado || 'Pendiente') + '</span>' +
         '</div>' +
         '<div class="portal-pedido-items">' + (p.items || '—') + '</div>' +
-        '<div class="portal-pedido-total">' + (p.total || '') + '</div>' +
-        '<button class="btn-repetir" onclick="window._repetirPedido(' + JSON.stringify(p.itemsRaw || []) + ')">🔁 Repetir pedido</button>';
+        '<div class="portal-pedido-envio">📦 ' + (p.envio || '') + '</div>' +
+        '<div class="portal-pedido-footer">' +
+          '<span class="portal-pedido-total">' + (p.total || '') + '</span>' +
+          '<button class="btn-repetir" onclick=\'window._repetirPedido(' + JSON.stringify(p.itemsRaw || []) + ')\'>🔁 Repetir</button>' +
+        '</div>';
       cont.appendChild(el);
     });
+
+    // Stats
+    document.getElementById('piTotalPedidos').textContent = snap.size;
+    document.getElementById('piTotalGastado').textContent = '$' + totalGastado.toLocaleString('es-AR');
   } catch(err) {
-    cont.innerHTML = '<div class="portal-empty"><div class="portal-empty-icon">⚠️</div><h3>Error al cargar pedidos</h3><p>' + err.message + '</p></div>';
+    cont.innerHTML = '<div class="portal-empty"><div class="portal-empty-icon">⚠️</div><h3>Error al cargar</h3><p>' + err.message + '</p></div>';
+  }
+};
+
+window._saveConfig = async function() {
+  const btn = document.getElementById('btnSaveConfig');
+  btn.textContent = 'Guardando...';
+  btn.disabled = true;
+  try {
+    const datos = {
+      nombre:    document.getElementById('cfgNombre').value.trim(),
+      telefono:  document.getElementById('cfgTelefono').value.trim(),
+      direccion: document.getElementById('cfgDireccion').value.trim(),
+      email:     currentUser.email,
+      uid:       currentUser.uid,
+    };
+    await setDoc(doc(db, 'clientes', currentUser.uid), datos, { merge: true });
+    // Actualizar nombre en Auth
+    if (datos.nombre) await updateProfile(currentUser, { displayName: datos.nombre });
+    // Refrescar panel perfil
+    document.getElementById('piNombre').textContent    = datos.nombre    || '—';
+    document.getElementById('piTelefono').textContent  = datos.telefono  || 'Sin completar';
+    document.getElementById('piDireccion').textContent = datos.direccion || 'Sin completar';
+    document.getElementById('portalName').textContent  = datos.nombre    || currentUser.email.split('@')[0];
+    document.getElementById('cfgSaved').style.display  = 'block';
+    setTimeout(function() { document.getElementById('cfgSaved').style.display = 'none'; }, 3000);
+  } catch(err) {
+    if (typeof showNotif === 'function') showNotif('Error al guardar: ' + err.message);
+  } finally {
+    btn.textContent = 'Guardar cambios';
+    btn.disabled = false;
   }
 };
 
@@ -3178,7 +3465,7 @@ window._repetirPedido = function(items) {
   if (typeof renderCart === 'function') renderCart();
   window._closePortal();
   if (typeof openCart === 'function') openCart();
-  if (typeof showNotif === 'function') showNotif('Pedido cargado al carrito.');
+  if (typeof showNotif === 'function') showNotif('Pedido cargado al carrito. ¡Listo para repetir!');
 };
 
 window._guardarPedidoFirebase = async function(pedido) {
@@ -3196,6 +3483,7 @@ window._guardarPedidoFirebase = async function(pedido) {
     });
   } catch(err) { console.warn('Firebase pedido:', err); }
 };
+
 </script>
 
 </body>
